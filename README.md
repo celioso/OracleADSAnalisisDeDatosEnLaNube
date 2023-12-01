@@ -212,3 +212,220 @@ Existe también un rango intermediario que debe ser considerado como señal de a
 Cuando una persona presenta valores de glicemia por encima de estos rangos, esta persona es hiperglicémica y posee diabetes de tipo *mellitus*. Ahora bien, cuando una persona presenta valores de glicemia por debajo de estos rangos, ella es hipoglicémica y posee diabetes de tipo *insipidus*.
 
 En caso de que desees entender más sobre la diabetes y sus tipos, te sugerimos la lectura del siguiente artículo:[ ¿Cuál es la diferencia entre la diabetes tipo 1, 2, 3 y gestacional?](https://temassobresalud.com/diferencia-diabetes/ " ¿Cuál es la diferencia entre la diabetes tipo 1, 2, 3 y gestacional?")
+
+### Desafío: rellenar las celdas de forma selectiva
+
+Al analizar nuestra base de datos, percibimos que existen algunos datos nulos en la columna de ‘glicemia’. Explorando más a fondo estos datos faltantes y relacionándolos con la columna de ‘diabetes’, identificamos que existem 337 datos nulos de ‘glicemia’ para las personas sin diabetes y 2 para personas con diabetes.
+
+Considerando esto, rellena nuevamente los valores faltantes de la columna ‘glicemia’, pero esta vez, utilizando un abordaje diferente:
+
+- Primero, reinicie el Kernel y ejecuta sus celdas de código, con excepción de la celda con el código de para rellenar las celdas con valores NaN: `ds.fillna({'glicemia': 81.8})`.
+
+- Para las personas con diabetes, rellena los datos nulos de la columna ‘glicemia’ con el promedio de glicemia para las personas con diabetes (este valor ya fue calculado en el aula):
+
+```python
+personas_con_diabetes = ds[ds.diabetes == 1]
+promedio_personas_con_diabetes = personas_con_diabetes .glicemia.mean()
+```
+
+Para las personas sin diabetes, rellena los datos nulos de la columna ‘glicemia’ con el **promedio de ‘glicemia’ para personas sin diabetes** (este valor ya fue calculado en el aula, también):
+
+```python
+personas_sin_diabetes = ds[ds.diabetes == 0]
+promedio_personas_sin_diabetes = personas_sin_diabetes .glicemia.mean()
+```
+
+### Opinión del instructor
+
+Para resolver este desafío, no vamos a utilizar la función `ads.fillna()`, sino que vamos a elaborar una función que recorre todos los registros de nuestro dataset y verifica si el dato es nulo. Cuando sea nulo, necesitamos verificar si la persona es diabética o no y sustituir el valor nulo por el promedio de la población dependiendo de la condición, y adicionarlo a una lista.
+
+Ya cuando el valor no es nulo, simplemente vamos a añadirlo a la lista. De esta forma, al final de la función tendremos una lista con todos los valores sin registros nulos.
+
+```python
+def promedio_segun_diabetes(df, personas_con_diabetes, personas_sin_diabetes):
+    nueva_glicemia = []
+    for i, row in df.iterrows():
+        if np.isnan(row.glicemia):
+            if row.diabetes == 1:
+                nueva_glicemia.append(personas_con_diabetes.glicemia.mean().round(2))
+            elif row.diabetes == 0:
+                nueva_glicemia.append(personas_sin_diabetes.glicemia.mean().round(2))
+        else:
+            nueva_glicemia.append(row.glicemia)
+    return nueva_glicemia
+```
+Antes de aplicar la nueva lista al DataFrame, será necesario resetear los índices del DataFrame, pues el número del índice no es continuo debido a los drops que tuvieron lugar durante la ejecución de las transformaciones.
+
+```python
+nueva_glicemia = promedio_segun_diabetes(df, personas_con_diabetes, personas_sin_diabetes)
+serie_glicemia = pd.Series(nueva_glicemia)
+ds = ds.reset_index()
+ds = ds.assign_column('glicemia_nueva', serie_glicemia)
+```
+
+### Haga lo que hicimos en aula
+
+Llegó la hora de que sigas todos los pasos realizados por mí durante esta aula. En caso de que ya lo hayas hecho, excelente. Si aún no lo hiciste, es importante que ejecutes lo que vimos en los videos para poder continuar con nuestra próxima aula.
+
+**Video Archivos externos**
+
+```python
+# Importando la biblioteca pandas
+import pandas as pd
+
+# Creando um objeto Pandas DataFrame
+datos = pd.read_csv('framingham.csv')
+
+# Visualizando la cantidad de filas y columnas del DataFrame
+datos.shape
+
+# Visualizando los nombres de las columnas del DataFrame
+datos.columns
+
+# Visualizando las 5 primeras filas del DataFrame
+dados.head()
+```
+**Video Cargando el CSV**
+```python
+# Importando la biblioteca ADS para crear un ADS DataSet
+import ads
+
+# Utilizando DatasetFactory para crear un Dataset ADS
+from ads.dataset.factory import DatasetFactory
+
+# Creando un Dataset ADS
+ds = DatasetFactory.open('framingham.csv')
+
+# Mostrando el tipo de objeto ds
+type(ds)
+
+# Mostrando el tipo de objeto datos
+type(datos)
+
+# Mostrando el Dataset ds
+ds
+
+# Creando el diccionario que contiene el nombre de las columnas en inglés como llave y su traducción al español como valor
+dict_ing_esp = {
+                     'male': 'sexo',
+                     'age': 'edad',
+                     'education': 'escolaridad',
+                     'currentSmoker': 'fumador',
+                     'cigsPerDay': 'cigarrillos_por_dia',                     
+                     'BPMeds': 'uso_medicamento_presion',
+                     'prevalentStroke': 'acv',
+                     'prevalentHyp': 'hipertension',
+                     'diabetes': 'diabetes',
+                     'totChol': 'colesterol_total',
+                     'sysBP': 'presion_arterial_sistolica',
+                     'diaBP': 'presion_arterial_diastolica',
+                     'BMI': 'imc',
+                     'heartRate': 'frecuencia_cardiaca',
+                     'glucose': 'glicemia',
+                     'TenYearCHD': 'riesgo_eac_decada'
+}
+
+# Renombrando las columnas
+ds =ds.rename_columns(columns=dict_ing_esp)
+
+# Mostrando el nombre de las columnas 
+ds.columns
+
+# Mostrando las 5 primeras filas de ds
+ds.head()
+
+# Excluyendo la columna ‘escolaridad’
+ds = ds.drop_columns('escolaridad')
+
+# Mostrando nuevamente el nombre de las columnas
+ds.columns
+```
+**Video Creando un ADS DataFrame**
+```python
+# Mostrando la clasificación estadística y los tipos de valores de cada columna del DataFrame
+ds.summary()
+
+# Mostrando los valores únicos de la columna ‘cigarrillos_por_dia’
+ds.cigarrillos_por_dia.unique()
+
+# Mostrando la cantidad total de valores nulos en cada columna del DataFrame
+ds.isnull().sum()
+
+# Creando un vector booleano (True y False) que posee el valor True en las filas donde la columna ‘cigarrillos_por_dia’ no posee valores nulos
+seleccion_correctos = ds.cigarrillos_por_dia.notnull()
+
+# Aplicando la selección de la variable seleccion_correctos al DataFrame
+ds = ds[seleccion_correctos]
+
+# Realizando la selección de filas no nulas con notnull de las columnas  ‘uso_medicamento_presion’, ‘colesterol_total’, ‘imc’ y ‘frecuencia_cardiaca’
+ds = ds[ds.uso_medicamento_presion.notnull()]
+ds = ds[ds.colesterol_total.notnull()]
+ds = ds[ds.imc.notnull()]
+ds = ds[ds.frecuencia_cardiaca.notnull()]
+```
+
+**Video Tratamiento de datos faltantes**
+
+```python
+# Creando un subset solamente con las personas diabéticas
+personas_con_diabetes = ds[ds.diabetes == 1]
+
+# Creando un subset solamente con las personas no diabéticas
+personas_sin_diabetes = ds[ds.diabetes == 0]
+
+# Mostrando las 5 primeras filas de la columna ‘glicemia’ del subset                         # personas_con_diabetes  
+personas_con_diabetes.glicemia.head()
+
+# Verificando el promedio de glicemia para personas diabéticas
+personas_con_diabetes.glicemia.mean()
+
+# Verificando el promedio de glicemia para personas no diabéticas
+personas_sin_diabetes.glicemia.mean()
+
+# Exhibiendo estadísticas descriptivas de la columna 'glicemia'
+ds.glicemia.describe()
+
+# Conteo del número de valores en la columna 'diabetes'
+ds.diabetes.value_counts()
+
+# Importando la biblioteca Seaborn de visualización de datos
+import seaborn as sns
+
+# Creando una gráfica de distribución de diabetes
+ax = sns.distplot(personas_con_diabetes.glicemia, norm_hist=False)
+
+# Definiendo los valores para inicio y fin del eje x en la gráfica
+ax.set_xlim(0,400)
+
+# Creando el mismo gráfico para personas sin diabetes
+ax = sns.distplot(personas_sin_diabetes.glicemia, norm_hist=False)
+ax.set_xlim(0,400)
+
+# Seleccionando solamente los datos para glicemia que son nulos.
+nulos = ds.glicemia.isnull()
+
+# Seleccionando las filas con valores nulos de glicemia en la columna ‘diabetes’ y  contando los datos
+ds[nulos].diabetes.value_counts()
+
+# Calculando el promedio de valores de la columna ‘glicemia’
+ds.glicemia.mean()
+
+# Llenando los datos faltantes en la columna ‘glicemia’ con el valor 81.8 y aplicando la sustitución directamente en el dataset
+ds.fillna({'glicemia': 81.8}, inplace = True)
+```
+
+### Lo que aprendimos
+
+Lo que aprendimos en esta aula:
+
+- Importar la base de datos utilizando la biblioteca `pandas`;
+- Importar la base de datos utilizando la biblioteca `ads`;
+- Manipular **ADS DataFrames**;
+- Tratar datos faltantes utilizando el método `fillna()`; y
+- Identificar diferentes tipos de **DataFrame**.
+
+### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior. (Recuerda que estamos trabajando en el Notebook del ecosistema de nube de Oracle)
+
+[Descargue los archivos en Github](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/blob/aula-3/notebook_analisis_salud-aula_3.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/archive/refs/heads/aula-3.zip "aquí") para descargarlos directamente.
