@@ -163,3 +163,40 @@ Lo que aprendimos en esta aula:
 En el siguiente enlace hallarás el [dataset](https://www.kaggle.com/datasets/dileep070/heart-disease-prediction-using-logistic-regression "dataset") que usaremos en este entrenamiento.
 
 [Descargue los archivos en Github](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/blob/aula-2/notebook_analisis_salud-aula_2.ipynb "Descargue los archivos en Github") o haga clic[ aquí](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/archive/refs/heads/aula-2.zip " aquí") para descargarlos directamente.
+
+### Para saber más: diferentes tipos de DataFrame
+
+Existen diferentes tipos de DataFrames; el más conocido de ellos es el de la biblioteca Pandas. Pero, además de este, tenemos otros tipos pertenecientes a otras bibliotecas, como es el caso del **ADS DataFrame** que aprendimos en los últimos videos. Cada uno de estos tipos poseen sus características específicas y pueden ser utilizados en diferentes situaciones.
+
+Vamos a aprender algunas características adicionales de estos DataFrames y también a conocer un poco sobre la biblioteca **Dask**.
+
+ - **Pandas**
+Pandas es una biblioteca escrita en Python, utilizada para el análisis y la manipulación de datos. El **Pandas DataFrame** es una estructura de datos bidimensional que puede almacenar datos de diferentes tipos (enteros, floats, datos categóricos, strings, entre otros) en columnas. Su formato es similar al de una planilla de Excel, siendo compuesto por filas y columnas.
+
+[DataFrame](https://caelum-online-public.s3.amazonaws.com/ESP+-+1897+-+Oracle+ADS%3A+an%C3%A1lisis+de+datos+en+la+nube/26.jpg "DataFrame")
+
+Las principales características de este DataFrame son:
+
+- Fácil aprendizaje;
+- Almacena diferentes tipos de datos;
+- Tratamiento flexible y simple de datos faltantes;
+- Acepta algunas operaciones aritméticas;
+- Fácil manipulación.
+
+Sin embargo, el uso de esta biblioteca no es muy indicado para trabajar con un gran volumen de datos. Esto se debe a que Pandas necesita que todos los datos estén prontamente disponibles en la memoria de tu computador y ello genera una limitación de la cantidad de datos con los cuales podemos trabajar y exigiendo mucho de nuestra máquina.
+
+ - **Dask**
+
+Dask es una biblioteca creada para la computación paralela en Python, ella funciona bien con otras bibliotecas como **Pandas**, **Numpy**, **Scikit-learn**, entre otras. El **Dask DataFrame** se compone de muchos **Pandas DataFrames**, lo que hace que la manera como el computador trabaja con los comandos en este tipo de DataFrame sea diferente.
+
+[Pandas DataFrames](https://caelum-online-public.s3.amazonaws.com/ESP+-+1897+-+Oracle+ADS%3A+an%C3%A1lisis+de+datos+en+la+nube/27.jpg "Pandas DataFrames")
+
+La forma diferente de trabajo de Dask se da por una característica de este en atrasar tareas, en la cual, él prepara un conjunto de transformaciones o cálculos para una ejecución posterior en paralelo. Esta estructura es diferente de otras funciones en Python que son computadas instantáneamente, al momento en que son llamadas.
+
+De esta forma, el atraso de tareas de Dask permite que esta biblioteca lidie muy bien con un conjunto de datos muy grande o con muchos grupos en sus datos, lo cual es una ventaja sobre Pandas, que necesitaría de un poder de procesamiento muy alto para lidiar con datos como estos.
+
+- ADS
+
+ADS es una biblioteca Python que hace parte del servicio de Data Science de **Oracle Cloud Infrastructure (OCI)**. Esta biblioteca posee una interfaz amigable y métodos que abarcan toda la parte de análisis y de manipulación de datos. El **ADS DataFrame** es una estructura de datos basado en Pandas; de esta forma, cualquier operación que se pueda ejecutar en un **Pandas DataFrame** también puede ser aplicada en un conjunto de datos ADS.
+
+En el ambiente Oracle, es más interesante utilizar funciones específicas de ADS debido a la mayor compatibilidad con el ambiente. Por ello, durante el curso optaremos por utilizar las funciones de ADS en vez de las de otras bibliotecas como Pandas y Dask.
