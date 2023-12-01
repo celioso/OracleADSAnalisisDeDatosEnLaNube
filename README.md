@@ -200,3 +200,15 @@ De esta forma, el atraso de tareas de Dask permite que esta biblioteca lidie muy
 ADS es una biblioteca Python que hace parte del servicio de Data Science de **Oracle Cloud Infrastructure (OCI)**. Esta biblioteca posee una interfaz amigable y métodos que abarcan toda la parte de análisis y de manipulación de datos. El **ADS DataFrame** es una estructura de datos basado en Pandas; de esta forma, cualquier operación que se pueda ejecutar en un **Pandas DataFrame** también puede ser aplicada en un conjunto de datos ADS.
 
 En el ambiente Oracle, es más interesante utilizar funciones específicas de ADS debido a la mayor compatibilidad con el ambiente. Por ello, durante el curso optaremos por utilizar las funciones de ADS en vez de las de otras bibliotecas como Pandas y Dask.
+deactivate
+### Para saber más: relación entre diabetes y glicemia
+
+El principal carbohidrato existente en el torrente sanguíneo es la glucosa (azúcar). Durante el día la cantidad de glucosa varía, lo cual es normal y está intimamente relacionado a nuestros hábitos de vida. El término glicemia se refiere a la cantidad de glucosa en la sangre, y en condiciones normales, los valores de referencia para la glicemia son:
+
+- Glicemia en ayuno de 8 a 12 horas: 70 a 110 mg/dL;
+- Glicemia después de comer o sobrecarga de glucosa: Hasta 200mg/dL.
+Existe también un rango intermediario que debe ser considerado como señal de alerta para un cambio de hábitos alimenticios; este rango de glicemia se concentra entre 110 y 126 mg/dL en ayuno.
+
+Cuando una persona presenta valores de glicemia por encima de estos rangos, esta persona es hiperglicémica y posee diabetes de tipo *mellitus*. Ahora bien, cuando una persona presenta valores de glicemia por debajo de estos rangos, ella es hipoglicémica y posee diabetes de tipo *insipidus*.
+
+En caso de que desees entender más sobre la diabetes y sus tipos, te sugerimos la lectura del siguiente artículo:[ ¿Cuál es la diferencia entre la diabetes tipo 1, 2, 3 y gestacional?](https://temassobresalud.com/diferencia-diabetes/ " ¿Cuál es la diferencia entre la diabetes tipo 1, 2, 3 y gestacional?")
