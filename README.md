@@ -640,4 +640,89 @@ Lo que aprendimos en esta aula:
 
 ¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.(Recuerda que estamos trabajando en el Notebook del ecosistema de nube de Oracle)
 
-[Descargue los archivos en Github](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/blob/aula-4/notebook_analisis_salud-aula_4.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/archive/refs/heads/aula-4.zip "aquí") para descargarlos directamente.S
+[Descargue los archivos en Github](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/blob/aula-4/notebook_analisis_salud-aula_4.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/archive/refs/heads/aula-4.zip "aquí") para descargarlos directamente.
+
+### Para saber más: correlación
+
+La correlación determina el grado de asociación entre dos variables, por ejemplo:
+
+- El precio de un carro y el precio de su seguro;
+- la edad y el costo de un plan de salud;
+- Masa corporal y altura.
+Pero no siempre esta asociación entre las variables es una relación fácil de ser identificada. De esa forma, existen los coeficientes de correlación que son los responsables por determinar el grado de "fuerza" de la correlación entre dos variables y también su dirección.
+
+**Coeficiente de Correlación de Pearson**
+
+También conocido como "ρ de Pearson" mide cuánto dos variables contínuas son correlacionadas. Dicho coeficiente puede variar de -1 a 1, donde estos valores indican:
+
+- Valores de 0 a -0.3 ou 0 a 0.3: - correlación irrelevante;
+- Valores de -0.3 a -0.5 ou 0.3 a 0.5: correlación debil;
+- Valores de -0.5 a -0.7 ou 0.5 a 0.7: correlación moderada;
+- Valores de -0.7 a -0.9 ou 0.7 a 0.9: correlación fuerte;
+- Valores de -0.9 a -1 ou 0.9 a 1: correlação muy fuerte.
+Para medir el grado de correlación de variables que no son contínuas existen otros coeficientes de correlación que pueden ser utilizados, como el de Spearman, Kendall, entre otros. Si deseas conocer un poco más sobre estos otros métodos, te sugiero leer más sobre [Correlación](https://www.probabilidadyestadistica.net/correlacion/ "Correlación").
+
+### Haga lo que hicimos en aula
+
+Llegó la hora de que sigas todos los pasos realizados por mí durante esta aula. En caso de que ya lo hayas hecho, excelente. Si aún no lo hiciste, es importante que ejecutes lo que vimos en los videos para poder continuar con nuestra próxima aula.
+
+**Video Correlación**
+
+```python
+# Visualizando la tabla de correlaciones
+ds.corr()
+
+# Importando las bibliotecas necesarias para usar el mapa de calor
+import matplotlib.pyplot as plt
+
+# Creando el lienzo para la figura en un tamaño determinado
+plt.figure(figsize=[8,6])
+
+# Creando una paleta de colores para el mapa de calor
+paleta = sns.color_palette('light:salmon', as_cmap=True)
+
+# Creando el heatmap a partir de la tabla de correlación y de la paleta creada
+sns.heatmap(ds.corr(), annot=True, cmap=paleta)
+```
+**Video ADS y sugerencias automáticas**
+```python
+# Verificando las sugerencias que ADS realiza para el Dataset
+ds.suggest_recommendations()
+```
+**Video Aplicando sugerencias**
+```python
+# Creando un nuevo ADS DataFrame a partir de la base original
+base_original = DatasetFactory.open('framingham.csv', target='TenYearCHD')
+
+# Traduciendo los nombres de las columnas
+base_original = base_original.rename_columns(dict_ing_esp)
+
+# Verificando las sugerencias que ADS realiza para el dataset
+base_original.suggest_recommendations()
+
+# Transformando la base original con base en las recomendaciones
+base_original = base_original.auto_transform()
+
+# Visualizando la base pós alteraciones
+base_original.show_in_notebook()
+```
+**Video Comparado las bases**
+```python
+# Visualizando la base que fue modificada manualmente
+ds.show_in_notebook()
+```
+### Lo que aprendimos
+
+Lo que aprendimos en esta aula:
+
+- Encontrar la correlación de los datos con ADS;
+- Verificar sugerencias de ajuste al banco de datos;
+- Aplicar las sugerencias de ADS al conjunto de datos;
+- Identificar qué es la correlación.
+
+### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior. (Recuerda que estamos trabajando en el Notebook del ecosistema de nube de Oracle)
+
+[Descargue los archivos en Github](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/blob/aula-5/notebook_analisis_salud-aula_5.ipynb "Descargue los archivos en Github") o haga clic[ aquí](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/archive/refs/heads/aula-5.zip " aquí") para descargarlos directamente.
+
