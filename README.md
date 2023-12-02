@@ -429,3 +429,215 @@ Lo que aprendimos en esta aula:
 ¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior. (Recuerda que estamos trabajando en el Notebook del ecosistema de nube de Oracle)
 
 [Descargue los archivos en Github](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/blob/aula-3/notebook_analisis_salud-aula_3.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/archive/refs/heads/aula-3.zip "aquí") para descargarlos directamente.
+
+### Para saber más: tipos de datos
+
+En los estudios anteriores utilizamos el método `astype()` para definir los tipos de datos. Pudimos notar que además de la definición del tipo de variable hay otra definición que involucra la clasificación estadística de cada columna.
+
+La clasificación estadística tiene que ver con la definición del tipo de dato que será trabajado con respecto al significado de lo que contiene; para entender mejor sobre la clasificación estadística y los tipos de variables puedes acceder al siguiente [enlace](https://economipedia.com/definiciones/variable-estadistica.html "enlace").
+
+Podemos establecer una similaridad entre los conceptos citados y los parámetros formulados por la biblioteca ADS:
+
+Cada uno de los parámetros ADS puestos en la tabla puede ser definido con el método `astype()` de acuerdo con su tipo de dato.
+
+En las aulas anteriores, el instructor definió la columna 'cigarrillos_por_dia' como 'int64' y la columna 'uso_medicamento_presion' como 'int64' a través de la función `astype()` y la clasificación estadística solo fue repetida de la especificada por el propio ADS:
+
+```python
+ds = ds.astype(types={
+    'cigarrillos_por_dia': 'int64',
+    'cigarrillos_por_dia': 'ordinal',
+    'uso_medicamento_presion': 'int64',
+    'uso_medicamento_presion': 'categorical'
+})
+```
+Sin embargo, notamos que la columna 'cigarrillos_por_dia' fue establecida como tipo ordinal por ADS. Pero, según las descripciones de cada tipo de clasificación estadística, es más interesante asociar los valores de esta columna como valores cuantitativos, o con ADS, valor continuous, dado que realiza un conteo discreto de valores.
+
+Entretanto, con la columna 'uso_medicamento_presion' no tenemos este problema de asociación, ya que los datos de esta son binarios categorizando si ha habido o no (1 o 0) el uso de medicamentos para la presión.
+
+### Para saber más: transformando datos categóricos
+
+La función `cut()`, de la biblioteca Pandas, tiene como objetivo separar un conjunto de datos en categorías. Para que esta categorización sea realizada, esta función necesita recibir 2 atributos principales:
+
+- x: matriz con los datos a ser categorizados;
+- bins: Lista de límites o cantidade de categorías.
+Esta función también posee el atributo `labels` para el cual podemos pasar los títulos de cada una de las categorías. No obstante, este atributo es opcional, o sea, no necesitamos asignar nombres a cada una de las categorías.
+
+Esta función es muy utilizada cuando queremos categorizar datos contínuos. Para entender mejor la aplicación de esta función, considera el siguiente DataFrame:
+
+```python
+df = pd.DataFrame({'Nombre': ['Andrés', 'Catia', 'Denis', 'Beto', 'Bruna', 'Darío'], 
+                        'Edad': [5, 27, 15, 16, 19, 8]},  
+                        columns = ['Nombre', 'Edad'])
+```
+
+![nombre](https://caelum-online-public.s3.amazonaws.com/ESP+-+1897+-+Oracle+ADS%3A+an%C3%A1lisis+de+datos+en+la+nube/28.jpg "nombre")
+
+Supongamos que deseamos crear una tercera columna indicando si cada una de esas personas son niños, adolescentes o adultos con base en los valores presentados en la columna "Edad".
+
+Para hacer esto, necesitamos primeramente definir una lista de límites para los valores de la edad, o sea, vamos a definir hasta qué edad la persona debe ser considerada como niño, adolescente e así sucesivamente. De esta manera, vamos a crear la lista `limites_edades`:
+
+```python
+limites_edades = [1,13,18,60]
+```
+
+Con esta lista, estamos definiendo 3 intervalos de edad, siendo ellos:
+
+- Intervalo 1: De 1 a 13;
+- Intervalo 2: De 14 a 18;
+- Intervalo 3: De 19 a 60.
+Ahora, vamos a crear una lista con categorías para cada uno de estos intervalos:
+```python
+categorias = ['Niño(a)', 'Adolescente', 'Adulto(a)']
+```
+
+Con estas dos listas creadas, podemos utilizar la función `cut()` para generar una tercera columna clasificando a las personas en niño(a), adulto(a) o adolescente de acuerdo con su edad. Para ello, colocaremos como parámetro la columna "Edad" de nuestro DataFrame para el atributo x, la lista `limites_edades` para el atributo `bins` y la lista `categorias` para el atributo labels:
+```python
+rango_edad = pd.cut(x = df.Edad, 
+                     bins = limites_edades, 
+                     labels = categorias)
+```
+Para finalizar, basta crear una nueva columna en el DataFrame `df` y configurar la columna `rango_edad` con el resultado de la función `cut()`:
+```python
+df['Rango_edad'] = rango_edad
+```
+El DataFrame resultante será igual a:
+
+![DataFrame](https://caelum-online-public.s3.amazonaws.com/ESP+-+1897+-+Oracle+ADS%3A+an%C3%A1lisis+de+datos+en+la+nube/29.jpg "DataFrame")
+
+¡Te felicito! Ahora nuestro DataFrame `df` posee también la columna "Rango_edad" con las categorías que definimos de acuerdo con la columna "Edad".
+
+### Para saber más: análisis exploratorio
+
+El análisis exploratorio es una parte muy importante en el desarrollo de un proyecto de datos. Esta etapa consiste en el análisis y la investigación del conjunto de datos, con la finalidad de entender y resumir sus principales características utilizando la visualización de datos y otros recursos de exploración.
+
+**¿Por qué el análisis exploratorio es tan importante?**
+
+Es durante esta etapa de exploración que el profesional de ciencia de datos logra identificar algunas características del conjunto de datos, como:
+
+- errores;
+- datos nulos;
+- desbalanceo de datos;
+- tipos de datos dispuestos en cada columna;
+- relación entre las variables; y
+- distribución de los valores de cada columna.
+
+**El método ads.show_in_notebook()**
+
+Utilizar el método `show_in_notebook()` es una excelente manera de iniciar el proceso de exploración de los datos. Esto porque, este método retorna diversas informaciones sobre nuestra base de datos, como: tipos de datos, correlación entre las variables, avisos (warnings) y gráficos de distribución de cada columna.
+
+Sin embargo, la utilización de esta herramienta no sustituye la importancia de realizar un análisis exploratorio de forma más manual y profunda. Solo así, vas a conocer la base de datos de forma más detallada, identificar sus principales problemas y, con ello, obtener más ideas de cómo tratar y manipular tus datos de la mejor manera.
+
+### Desafío: grafica una columna
+
+Estudiamos como la visualización de datos es importante en el proceso de conocer mejor los datos. También observamos que la biblioteca ADS tiena algunas funciones específicas que nos ayudan a hacer esta visualización de forma eficiente.
+
+Ahora es tu turno: realiza una gráfica de una de las columnas que aún no fue explorada con las funciones de la biblioteca ADS.
+
+### Opinión del instructor
+
+Para resolver este desafío, puedes emplear la función `ads.plot()` para crear la visualización ideal (según ADS):
+
+```python
+ads.plot('<nombre_de_la_coluna>')
+```
+
+### Haga lo que hicimos en aula
+
+Llegó la hora de que sigas todos los pasos realizados por mí durante esta aula. En caso de que ya lo hayas hecho, excelente. Si aún no lo hiciste, es importante que ejecutes lo que vimos en los videos para poder continuar con nuestra próxima aula.
+
+**Video Preparando los datos**
+
+```python
+# Verificando el tipo de datos y estadístico para cada columna
+ds.summary()
+
+# Modificando el tipo de la variable ‘cigarrillos_por_dia’
+ds = ds.astype(types={'cigarrillos_por_dia':'int64'})
+
+# Modificando el tipo de la variable ‘uso_medicamento_presion’
+ds = ds.astype(types={'uso_medicamento_presion':'int64'})
+
+# Verificando el tipo de datos y estadístico nuevamente
+ds.summary()
+```
+**Video Ejecutando las transformaciones**
+```python
+# Verificando las estadísticas descriptivas de la variable ‘cigarrillos_por_dia’
+ds.cigarrillos_por_dia.describe()
+
+# Creando un gráfico de distribución de la variable ‘cigarrillos_por_dia’
+ax = sns.distplot(ds.cigarrillos_por_dia, norm_hist=False)
+ax.set_xlim(0,70)
+
+# Verificando la cantidad de fumadores y de no fumadores
+ds.fumador.value_counts()
+
+# Realizando una gráfica boxplot de la variable ‘cigarrillos_por_dia’
+sns.boxplot(ds.cigarrillos_por_dia)
+
+# Verificando el promedio de ‘cigarrillos_por_dia’
+ds.cigarrillos_por_dia.mean()
+
+# Definiendo las categorías de acuerdo con la cantidad de cigarrillos consumidos por día:
+#               0 - no fumador;
+#               1 - fumador leve (1 a 10 cigarrillos por día);
+#               2 - fumador moderado (11 a 20 cigarrillos por día);
+#               3 - fumador severo (más de 20 cigarrillos por día).
+categorias = [0,1,2,3]
+
+# Definiendo los límites para categorizar a los fumadores
+limites = [-1, 1, 11,21, 71]
+
+# Creando una variable categórica basada en límites y rótulos utilizando Pandas Cut
+categoria_de_fumador = pd.cut(ds.cigarrillos_por_dia, limites, labels=categorias)
+
+# Creando una columna con los datos resultantes de categoria_de_fumador 
+ds = ds.assign_column('categoria_de_fumador', categoria_de_fumador)
+
+# Verificando las columnas del DataFrame
+ds.columns
+```
+**Video Visualizando datos con ADS**
+
+```python
+# Función que devuelve la visualización de las estadísticas descriptivas del DataFrame, Gráficos de distribución de todas las variables, correlación y avisos sobre los datos
+ds.show_in_notebook()
+
+# Generando la gráfica ideal para la variable target del DataFrame
+ds.target.show_in_notebook()
+```
+**Video Generando más visualizaciones**
+```python
+# Generando la gráfica ideal para la variable ‘glicemia’
+ds.plot('glicemia')
+
+# Generando la gráfica ideal para la variable ‘diabetes’
+ds.plot('diabetes')
+
+# Graficando las variables ‘glicemia’ y ‘diabetes’ en una misma gráfica
+ds.plot('glicemia', 'diabetes')
+
+# Graficando las variables ‘categoria_de_fumador’ y ‘acv’ en una misma gráfica
+ds.plot('categoria_de_fumador', 'acv')
+
+# Transformando el ADS DataFrame en un Pandas DataFrame
+pandas_ds = ds.to_pandas()
+
+# Graficando la distribución de los datos de variable contra variable
+sns.pairplot(pandas_ds)
+```
+
+### Lo que aprendimos
+
+Lo que aprendimos en esta aula:
+
+- Analizar y a preparar datos en el ambiente de Oracle;
+- Transformar los tipos de datos con ADS;
+- Realizar el análisis exploratorio con `show_in_notebook()`;
+- Representar gráficos con ADS.
+
+### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.(Recuerda que estamos trabajando en el Notebook del ecosistema de nube de Oracle)
+
+[Descargue los archivos en Github](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/blob/aula-4/notebook_analisis_salud-aula_4.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/archive/refs/heads/aula-4.zip "aquí") para descargarlos directamente.S
