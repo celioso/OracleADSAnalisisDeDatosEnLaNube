@@ -726,3 +726,161 @@ Lo que aprendimos en esta aula:
 
 [Descargue los archivos en Github](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/blob/aula-5/notebook_analisis_salud-aula_5.ipynb "Descargue los archivos en Github") o haga clic[ aquí](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/archive/refs/heads/aula-5.zip " aquí") para descargarlos directamente.
 
+### Para saber más: balanceo de datos
+
+Los datos desbalanceados son aquellos que poseen muchos registros para una categoría y pocos para otra. Por ejemplo, imagina que estamos trabajando con datos sobre el oceano y queremos verificar las condiciones en las cuales se presenta un maremoto.
+
+Si tenemos datos de todos los días de un año, es bastante probable que existan muchos más datos de mar normal que de maremoto. Con eso, podemos tener dificultades en localizar los datos que se refieren a esta condición específica.
+
+De la misma forma, si nuestro interés es crear algún modelo que pueda prever, basado en los datos, si habrá un tsunami, el modelo puede tener dificultades debido a la pequeña cantidad de datos sobre maremoto.
+
+Por ello, existen técnicas conocidas como balanceo de datos. Estas técnicas realizan precisamente un balanceo, igualando el número de registros que se refieren a días con y sin maremoto.
+
+Estas técnicas se dividen en dos vertientes principales: upsampling o sobremuestreo y downsamping o submuestreo.
+
+Las técnicas de sobremuestreo consisten en crear (basados en los registros existentes) nuevos registros para la clase que aparece menos, hasta que la cantidad de registros para ambas clases se iguale. Por otro lado, las técnicas de submuestreo consisten en excluir registros de la clase que más aparece hasta que se tenga la misma cantidad de registros para ambas clases.
+
+Cada una de estas técnicas se adecúa mejor a diversas situaciones. A continuación discutiremos algunas ventajas y desventajas de cada una de estas técnicas.
+
+**Upsampling**
+
+- Ventajas
+ - Aumenta el número de registros.
+ - Facilita a criação de modelos de ML.
+- Desventajas
+ - Crea distorsiones al Dataframe.
+ - Genera registros que no corresponden con la realidad.
+**Downsampling**
+- Ventajas
+ - No cria distorções no Dataframe.
+- Desventajas
+ - Disminuye la cantidad de registros.
+
+ ### Para saber más: documentación de datos
+
+La documentación es una buena práctica del área de software, cuando estamos escribiendo código, es importante que hagamos comentarios explicando lo que las funciones realizan, por ejemplo.
+
+Quando trabajamos con datos, también es importante mantener la documentación de aquello que hacemos y para ello, empleamos metadatos. Los metadatos son datos sobre los datos. Cuando creamos un texto, o cualquier otro documento que habla sobre cuales son los datos y cómo estos están distribuídos en un `.csv`, por ejemplo, estamos creando metadatos.
+
+Estos son útiles pues les permiten a las otras personas conocer los datos de una forma eficiente, así como aclarar la información sobre cuáles transformaciones los datos sufrieron y también cuál es el contexto de los datos. Una buena documentación permite que otras personas comprendan tu trabajo y puedan continuarlo.
+
+### Desafío: documenta tus conclusiones
+
+¡Ahora, es tu turno de documentar los datos!
+
+Crea una sección de conclusiones en la documentación de los datos y anota tus impresiones sobre lo que aprendiste con la exploración de los datos.
+
+### Opinión del instructor
+
+En la documentación es importante insertar la información que consideras más importante luego de análizar el conjunto de datos. También incluye algún aprendizaje que crees que las personas que trabajarán con estos datos deben saber, como la relación entre diabetes y glicemia.
+
+Si lo deseas, te invito a compartir en el foro tus conclusiones y compararlas con las de tus compañeros de curso.
+
+### Haga lo que hicimos en aula
+
+Llegó la hora de que sigas todos los pasos realizados por mí durante esta aula. En caso de que ya lo hayas hecho, excelente. Si aún no lo hiciste, es importante que ejecutes lo que vimos en los videos para poder continuar con nuestra próxima aula.
+
+**Video Balanceo de datos**
+
+```python
+# Verificando el balanceo de la variable target
+ds.target.show_in_notebook()
+
+# Verificando el porcentaje de valores positivos y negativos
+ds.riesgo_EAC_decada.value_counts(normalize=True)
+```
+**Video Aplicando el balanceo**
+
+```python
+# Instalando la biblioteca imbalanced-learn
+!pip install imbalanced-learn
+
+# Importando la biblioteca imbalanced-learn
+import imblearn
+
+# Efectuando el balanceo por up_sample
+ds = ds.up_sample(sampler='default')
+
+# Visualizando la variable target balanceada
+ds.target.show_in_notebook()
+
+# Visualizando datos del DataFrame
+ds.show_in_notebook()
+```
+**Video Documentación de datos**
+
+```python
+#Generando una descripción para el DataFrame
+descripcion = """
+- Información general: Esta base de datos se refiere a un estudio realizado recolectando datos sobre el estado de salud de los pacientes para tratar de clasificar el riesgo de enfermedad coronaria en los próximos 10 años. Para consultar la base original, puede acceder al siguiente [link](https://www.kaggle.com/dileep070/heart-disease-prediction-using-logistic-regression).
+
+Los datos fueron modificados con el objetivo de corregir los problemas de la base y dejarla lista para poder realizar modelos empleando Machine Learning.
+
+-Tipo de las Columnas:
+- 'sexo': booleano,
+- 'edad': numérico,
+- 'cigarrillos_por_dia': categórico,                                                                   - 'uso_medicamento_presion': booleano
+      - 'acv': booleano,
+         - 'hipertension': booleano,
+         - 'diabetes': booleano,
+          - 'colesterol_total': numérico,
+         - 'presion_arterial_sistolica': numérico,
+          - 'presion_arterial_diastolica': numérico,
+           - 'imc': numérico,
+           - 'frecuencia_cardiaca': numérico,
+           - 'glicemia': numérico,
+           - 'riesgo_EAC_decada': booleano.
+
+- Detalle de las Columnas:
+           - 'sexo': Considera masculino como 1 y femenino como 0;
+           - 'edad': Edad en años completos;
+- 'cigarrillos_por_dia': Define diferentes grupos de personas de acuerdo con la cantidad de cigarrillos consumidos por día:
+                0 - no fumador;
+                1 - fumador leve (1 a 10 cigarrillos por día);
+                2 - fumador moderado (11 a 20 cigarrillos por día);
+                3 - fumador severo (más de 20 cigarrillos por día).
+- 'uso_medicamento_presion': Si la persona toma o no medicamentos para la presión;
+          - 'acv': Si ya tuvo Accidente Cerebro-Vascular;
+           - 'hipertension': Si la persona sufre de hipertensión;
+           - 'diabetes': Si la persona es diabética;
+          - 'colesterol_total': Cantidad de colesterol total;
+           - 'presion_arterial_sistolica': Presión arterial sistólica medida;
+           - 'presion_arterial_diastolica': Presión arterial diastólica medida;
+           - 'imc': Índice de masa corporal;
+           - 'frecuencia_cardiaca': frecuencia cardíaca en pulsaciones por minuto;
+            - 'glicemia': Cantidad de glicemia en la sangre,
+- 'riesgo_EAC_decada': Clasificación de riesgo para enfermedad coronaria en los próximos 10 años:
+               0 - No está en el grupo de riesgo;
+               1 - Está en el grupo de riesgo.
+"""
+
+# Verificando la descripción actual del DataFrame
+ds.description
+
+# Atribuyendo la nueva descripción
+ds.set_description(descricao)
+
+# Visualizando datos del dataset
+ds.show_in_notebook()
+```
+
+**Video Generando un CSV**
+
+```python
+#Creando un csv con los datos finales
+ds.to_csv('datos_salud_final.csv', index=False)
+```
+
+### Proyecto final
+
+Aquí puedes descargar los archivos del proyecto completo. (Recuerda que estamos trabajando en el Notebook del ecosistema de nube de Oracle)
+
+[Descargue los archivos en Github](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/blob/proyecto-final/notebook_analisis_salud-proyecto_final.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/ahcamachod/1897-oracle-ads-analisis-de-datos-en-la-nube/archive/refs/heads/proyecto-final.zip "aquí") para descargarlos directamente.
+
+### Lo que aprendimos
+Lo que aprendimos en esta aula:
+
+- Balancear un dataset;
+- Documentar el trabajo realizado con los datos;
+- Generar un archivo `.csv` con las modificaciones realizadas;
+- Generar un banco de datos Oracle con el archivo `.csv` que fue generado.
